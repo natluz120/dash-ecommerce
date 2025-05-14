@@ -1,17 +1,25 @@
 import pandas as pd
 
 # Lê o CSV
-df = pd.read_csv("ecommerce_estatistica (2).csv")
+df = pd.read_csv("ecommerce_estatistica(2).csv")
 
 # Visualiza as primeiras linhas
 print(df.head())
+print(df.columns)
 
 import pandas as pd
 from dash import Dash, html, dcc
 import plotly.express as px
 
 # Lê o CSV
-df = pd.read_csv("ecommerce_estatistica (2).csv")
+df = pd.read_csv("ecommerce_estatistica(2).csv")
+
+# Converte as colunas pra tipo numérico (força erro se não conseguir, pra evitar surpresas)
+df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce')
+df['Qtd_Vendidos'] = pd.to_numeric(df['Qtd_Vendidos'], errors='coerce')
+
+# Cria coluna de valor total por pedido
+df['ValorPedido'] = df['Preço'] * df['Qtd_Vendidos']
 
 # Cria o app Dash
 app = Dash(__name__)
@@ -33,4 +41,4 @@ app.layout = html.Div([
 ])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run(debug=True)
